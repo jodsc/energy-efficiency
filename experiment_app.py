@@ -7,125 +7,53 @@ heating_model = pickle.load(open("models/xgboost_regression_model1.pkl", "rb"))
 cooling_model = pickle.load(open("models/model_cooling.pkl", "rb"))
 
 # App title
-st.title("House Energy Efficiency and Energy Cost Calculator")
+st.title("Predictor for Your Heating and AC")
 
-# Initialize page state in session state if not already present
-if 'page' not in st.session_state:
-    st.session_state.page = 'Main'
+st.write("This app predicts the heating and cooling loads and helps you to find the right heating and AC model.")
 
-# Function to set the current page
-def set_page(page_name):
-    st.session_state.page = page_name
-
-# Sidebar title
-st.sidebar.header("Menu")
-
-# Sidebar buttons for navigation
-if st.sidebar.button("Main"):
-    set_page('Main')
-if st.sidebar.button("About this App"):
-    set_page('About this App')
-if st.sidebar.button("Energy Efficiency"):
-    set_page('Energy Efficiency')
-if st.sidebar.button("Price for Energy Consumption"):
-    set_page('Price for Energy Consumption')
-if st.sidebar.button("Calculator"):
-    set_page('Calculator')
-
-# Custom CSS for button styling
-st.sidebar.markdown("""
-    <style>
-    .stButton>button {
-        width: 100%;
-        border-radius: 20px;
-        border: 1px solid #4CAF50;
-        color: white;
-        background-color: #4CAF50;
-        padding: 10px 24px;
-        cursor: pointer;
-        font-size: 18px;
-    }
-    .stButton>button:hover {
-        background-color: #45a049;
-    }
-    </style>
-    """, unsafe_allow_html=True)
-
-# Content for "About this App"
-if st.session_state.page == 'About this App':
-    st.title("About this App")
-    st.markdown("""
-        This app is part of a project designed during a class at the Data Science Retreat in Berlin. It serves as a demonstration of how Streamlit can be effectively used for data visualization and interactive data exploration.
-        
-        The app allows users to upload datasets, specifically tailored for the Palmer Penguins dataset, and explore various visualizations to uncover insights about the data.
-    """)
-
-# Content for "Calculator"
-elif st.session_state.page == 'Calculator':
-    st.title("Calculator")
-    # This part should be within the 'Main' or 'Calculator' condition block
-col1, col2, col3 = st.columns([1,1,3])
+col1, col2, col3 = st.columns([1, 1, 3])
 
 with col1:
-
-    # Inititalise features to means
-    # Volume must equal 771.5m3 but unclear how this relates to the input features
-
-    #X1 = 0.764
-    #X2 = 672
-    #X3 = 319
-    #X4 = 177
-    #X5 = 5.25
-    #X6 = 3.5 
-    #X7 = 0.234
-    #X8 = 2.81
-
-
-    #X1 = st.number_input("Relative compactness", 0.62, 0.98)
     X2 = st.number_input("Surface area", 514.5, 808.5)
     X3 = st.number_input("Wall area", 245.0, 416.0)
     X4 = st.number_input("Roof area", 110.25, 220.5)
 
 with col2:
-
     X5 = st.selectbox("Number of floors", ["One", "Two"])
+    X7 = st.selectbox("Window size/amount:", ["Small", "Medium", "Large"])
     X6 = st.selectbox("Aspect:", ["North", "East", "South", "West"])
-    X7 = st.number_input("Glazing area", 0.0, 0.4)
-    #X8 = st.number_input("Glazing area distribution")
+    energy_usage = st.selectbox("Energy usage level:", ["Low", "Medium", "High"])  # User specifies energy usage level
 
- # Set default or predetermined values for X1 and X8
-    X1 = -0.00119112 * X2 + 1.5642495965572887  # Calculated by the surface area
-    X8 = 3     # Example default value for X8
-
+# Set default or predetermined values for X1 and X8
+X1 = -0.00119112 * X2 + 1.5642495965572887  # Calculated by the surface area
+X8 = 3  # Example default value for X8
 
 with col3:
-    st.write("")
-    st.write("")
     if st.button("Predict"):
+        # Convert selections to model inputs
+        X5 = 3.5 if X5 == "One" else 7
+        aspect_dict = {"North": 2, "East": 3, "South": 4, "West": 5}
+        X6 = aspect_dict[X6]
+        window_size_dict = {"Small": 0.1, "Medium": 0.25, "Large": 0.4}
+        X7 = window_size_dict[X7]
 
-        if X5 == "One" :
-            X5 = 3.5
-        else:
-            X5 = 7
+        # Predict heating and cooling loads
+        hpred = heating_model.predict(np.array([[X1, X2, X3, X4, X5, X6, X7, X8]]).astype(np.float64))
+        cpred = cooling_model.predict(np.array([[X1, X2, X3, X4, X5, X6, X7, X8]]).astype(np.float64))
 
-        if X6 == "North":
-            X6 = 2
-        elif X6 == "East":
-                X6 = 3
-        elif X6 == "South":
-            X6 = 4
-        else:
-            X6 = 5
+        # Display predictions
+        st.write(f"The heating load prediction is: {hpred[0]}")
+        st.write(f"The cooling load prediction is: {cpred[0]}")
 
-        hpred = heating_model.predict(np.array([[X1,X2,X3,X4,X5,X6,X7,X8]]).astype(np.float64))
-        cpred = cooling_model.predict(np.array([[X1,X2,X3,X4,X5,X6,X7,X8]]).astype(np.float64))
+        # Energy usage adjustment
+        energy_factor = {"Low": 0.33, "Medium": 0.66, "High": 1.0}[energy_usage]
+        adjusted_heating_load = hpred[0] * energy_factor
 
-        st.write(f"The heating load prediction is: {hpred}")
-        st.write(f"The cooling load prediction is: {cpred}")
+        # Assume cost per unit of energy and heating system efficiency for demonstration
+        cost_per_unit = 0.15  # Example cost per kWh
+        heating_system_efficiency = 0.9  # Example efficiency factor
+        time_period = 365  # Days in a year
 
-# Content for "Main"
-elif st.session_state.page == 'Main':
-    st.write("Welcome to the main page. Use the menu to navigate through the app.")
-
-# Additional pages like "Energy Efficiency" and "Price for Energy Consumption" can follow the same pattern
-
+        # Calculate yearly heating bill
+        yearly_heating_bill = adjusted_heating_load * cost_per_unit * heating_system_efficiency * time_period
+        st.write(f"Estimated yearly heating bill: ${yearly_heating_bill:.2f}")

@@ -74,5 +74,11 @@ with col3:
         hpred = heating_model.predict(np.array([[X1,X2,X3,X4,X5,X6,X7,X8]]).astype(np.float64))
         cpred = cooling_model.predict(np.array([[X1,X2,X3,X4,X5,X6,X7,X8]]).astype(np.float64))
 
-        st.write(f"The heating load prediction is: {hpred}")
-        st.write(f"The cooling load prediction is: {cpred}")
+        
+        # Assuming cpred contains the cooling load prediction
+        hpred_rounded = round(cpred[0], 2)
+        st.write(f"The cooling load prediction is: {hpred_rounded}")
+        
+        # Assuming cpred contains the cooling load prediction
+        cpred_rounded = round(cpred[0], 2)
+        st.write(f"The cooling load prediction is: {cpred_rounded}")
