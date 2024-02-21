@@ -2,32 +2,28 @@ from ucimlrepo import fetch_ucirepo
 import pandas as pd
 from sklearn.model_selection import train_test_split
 import xgboost as xgb
+from xgboost import DMatrix, cv  # Ensure DMatrix and cv are imported
 from sklearn.metrics import mean_squared_error, r2_score
-import plotly.graph_objs as go
 import plotly.express as px
-  
-# fetch dataset 
-energy_efficiency = fetch_ucirepo(id=242) 
-  
-# data (as pandas dataframes) 
-X = energy_efficiency.data.features 
-y = energy_efficiency.data.targets 
-  
-# metadata 
-print(energy_efficiency.metadata) 
-  
-# variable information 
-print(energy_efficiency.variables) 
 
-import pandas as pd
+# Fetch dataset
+energy_efficiency = fetch_ucirepo(id=242)
+
+# Data (as pandas dataframes)
+X = energy_efficiency.data.features
+y = energy_efficiency.data.targets
+
+# Metadata
+print(energy_efficiency.metadata)
+
+# Variable information
+print(energy_efficiency.variables)
 
 # Combine 'X' and 'y' into a single DataFrame
 combined_df = pd.concat([X, y], axis=1)
 
 # Display the DataFrame
 print(combined_df.head())  # .head() shows the first 5 rows
-
-# Assuming combined_df is your DataFrame with features and target variables
 
 # Splitting the data into training and testing sets, focusing on 'Y1' as the target variable
 X_train, X_test, y_train, y_test = train_test_split(
@@ -49,8 +45,8 @@ params = {
 
 # Perform Cross-Validation
 cv_results = cv(
-    dtrain=dtrain, 
-    params=params, 
+    dtrain=dtrain,
+    params=params,
     nfold=5,  # Number of folds in K-Fold Cross-Validation
     num_boost_round=100,  # Number of boosting rounds, equivalent to n_estimators
     metrics='rmse',  # Root Mean Square Error as evaluation metric
@@ -62,9 +58,6 @@ cv_results = cv(
 print(cv_results)
 
 # Initialize the XGBoost regressor with the best parameters found
-xg_reg = XGBRegressor(objective='reg:squarederror', n_estimators=100, seed=42)
-
-# Initialize the XGBoost regressor
 xg_reg = xgb.XGBRegressor(objective='reg:squarederror', n_estimators=100, seed=42)
 
 # Train the model
@@ -91,11 +84,12 @@ importance_df = pd.DataFrame({'Feature': features, 'Importance': feature_importa
 importance_df = importance_df.sort_values(by='Importance', ascending=False)
 
 # Create a bar chart with Plotly
-fig = px.bar(importance_df, 
-             x='Importance', 
-             y='Feature', 
+fig = px.bar(importance_df,
+             x='Importance',
+             y='Feature',
              orientation='h',
              title='Feature Importance')
 
 # Display the chart
 fig.show()
+
