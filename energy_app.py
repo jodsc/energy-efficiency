@@ -68,4 +68,4 @@ with col3:
         #cpred = cooling_model(np.array([[X1,X2,X3,X4,X5,X6,X7,X8]]).astype(np.float64))
 
         st.write(f"The heating load prediction is: {hpred}")
-        st.write(f"The cooling load prediction is: {cpred}")
+        #st.write(f"The cooling load prediction is: {cpred}")
