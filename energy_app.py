@@ -9,12 +9,11 @@ cooling_model = pickle.load(open("models/model_cooling.pkl", "rb"))
 #https://tarjomefa.com/wp-content/uploads/2017/04/6453-English-TarjomeFa.pdf
 #st.image("image.jpg")
 
-st.title("Predictor for your heating and acc")
+st.title("Predictor for your heating and cooling")
 
-st.write("This app predicts the heating and cooling loads and helps you to find the right heating and acc model.")
+st.write("This app predicts the heating and cooling loads and helps you to find the right heating and cooling system.")
 
-col1, col2, col3 = st.columns([1,1,3])
-
+col1, col2= st.columns([1, 2])
 with col1:
 
     # Inititalise features to means
@@ -28,31 +27,37 @@ with col1:
     #X6 = 3.5 
     #X7 = 0.234
     #X8 = 2.81
-
     #X1 = st.number_input("Relative compactness", 0.62, 0.98)
-    X2 = st.number_input("Surface area", 514.5, 808.5)
-    X3 = st.number_input("Wall area", 245.0, 416.0)
-    X4 = st.number_input("Roof area", 110.25, 220.5)
-
-with col2:
-
+    
     X5 = st.selectbox("Number of floors", ["One", "Two"])
-    X7 = st.selectbox("Window size/amount:", ["Small", "Medium", "Large"])
-    X6 = st.selectbox("Aspect:", ["North", "East", "South", "West"])
+    if X5 == "One":
+        X2 = st.slider("Surface area", 686, 808, 720)
+    else:
+        X2 = st.slider("Surface area", 514, 661, 540)
+    
+    # X2 = st.number_input("Surface area", 514.5, 808.5)
+    # X3 = st.number_input("Wall area", 245.0, 416.0)
+    # X4 = st.number_input("Roof area", 110.25, 220.5)
+    X7 = st.selectbox("Window size:", ["Small", "Medium", "Large"])
+    X6 = st.selectbox("Building Orientation:", ["North", "East", "South", "West"])
 
  # Set default or predetermined values for X1 and X8
     X1 = -0.00119112 * X2 + 1.5642495965572887  # Calculated by the surface area
     X8 = 3     # Example default value for X8
 
 
-with col3:
+with col2:
     st.write("")
     st.write("")
     if st.button("Predict"):
 
         if X5 == "One" :
+            X3 = X2 - 441
+            X4 = 220.5
             X5 = 3.5
         else:
+            X3 = 0.68571429 * X2 - 78
+            X4 = 110.25
             X5 = 7
 
         if X6 == "North":
@@ -77,8 +82,8 @@ with col3:
         
         # Assuming cpred contains the cooling load prediction
         hpred_rounded = round(hpred[0], 2)
-        st.write(f"The cooling load prediction is: {hpred_rounded}")
+        st.write(f"The cooling load prediction is: {hpred_rounded :.2F}")
         
         # Assuming cpred contains the cooling load prediction
         cpred_rounded = round(cpred[0], 2)
-        st.write(f"The heating load prediction is: {cpred_rounded}")
+        st.write(f"The heating load prediction is: {cpred_rounded :.2f}")
