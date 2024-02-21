@@ -29,7 +29,6 @@ with col1:
     #X7 = 0.234
     #X8 = 2.81
 
-
     #X1 = st.number_input("Relative compactness", 0.62, 0.98)
     X2 = st.number_input("Surface area", 514.5, 808.5)
     X3 = st.number_input("Wall area", 245.0, 416.0)
@@ -38,9 +37,8 @@ with col1:
 with col2:
 
     X5 = st.selectbox("Number of floors", ["One", "Two"])
+    X7 = st.selectbox("Window size/amount:", ["Small", "Medium", "Large"])
     X6 = st.selectbox("Aspect:", ["North", "East", "South", "West"])
-    X7 = st.number_input("Glazing area", 0.0, 0.4)
-    #X8 = st.number_input("Glazing area distribution")
 
  # Set default or predetermined values for X1 and X8
     X1 = -0.00119112 * X2 + 1.5642495965572887  # Calculated by the surface area
@@ -60,11 +58,18 @@ with col3:
         if X6 == "North":
             X6 = 2
         elif X6 == "East":
-                X6 = 3
+            X6 = 3
         elif X6 == "South":
             X6 = 4
         else:
             X6 = 5
+
+        if X7 == "Small":
+            X7 = 0.1
+        elif X7 == "Medium":
+            X7 = 0.25
+        else:
+            X7 = 0.4
 
         hpred = heating_model.predict(np.array([[X1,X2,X3,X4,X5,X6,X7,X8]]).astype(np.float64))
         cpred = cooling_model.predict(np.array([[X1,X2,X3,X4,X5,X6,X7,X8]]).astype(np.float64))

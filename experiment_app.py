@@ -65,13 +65,22 @@ elif st.session_state.page == 'Calculator':
     st.title("Calculator")
     # This part should be within the 'Main' or 'Calculator' condition block
 col1, col2, col3 = st.columns([1,1,3])
-# Override defaults
-    
-    # Set default or predetermined values for X1 and X8
-    X1_default_value = 0.76  # Example default value for X1
-    X8_default_value = 3     # Example default value for X8
 
 with col1:
+
+    # Inititalise features to means
+    # Volume must equal 771.5m3 but unclear how this relates to the input features
+
+    #X1 = 0.764
+    #X2 = 672
+    #X3 = 319
+    #X4 = 177
+    #X5 = 5.25
+    #X6 = 3.5 
+    #X7 = 0.234
+    #X8 = 2.81
+
+
     #X1 = st.number_input("Relative compactness", 0.62, 0.98)
     X2 = st.number_input("Surface area", 514.5, 808.5)
     X3 = st.number_input("Wall area", 245.0, 416.0)
@@ -83,6 +92,11 @@ with col2:
     X6 = st.selectbox("Aspect:", ["North", "East", "South", "West"])
     X7 = st.number_input("Glazing area", 0.0, 0.4)
     #X8 = st.number_input("Glazing area distribution")
+
+ # Set default or predetermined values for X1 and X8
+    X1 = -0.00119112 * X2 + 1.5642495965572887  # Calculated by the surface area
+    X8 = 3     # Example default value for X8
+
 
 with col3:
     st.write("")
@@ -108,7 +122,6 @@ with col3:
 
         st.write(f"The heating load prediction is: {hpred}")
         st.write(f"The cooling load prediction is: {cpred}")
-    # Placeholder for Calculator code
 
 # Content for "Main"
 elif st.session_state.page == 'Main':
