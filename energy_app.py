@@ -29,9 +29,6 @@ with col1:
     #X7 = 0.234
     #X8 = 2.81
 
- # Set default or predetermined values for X1 and X8
-    X1 = 0.76  # Example default value for X1
-    X8 = 3     # Example default value for X8
 
     #X1 = st.number_input("Relative compactness", 0.62, 0.98)
     X2 = st.number_input("Surface area", 514.5, 808.5)
@@ -44,6 +41,10 @@ with col2:
     X6 = st.selectbox("Aspect:", ["North", "East", "South", "West"])
     X7 = st.number_input("Glazing area", 0.0, 0.4)
     #X8 = st.number_input("Glazing area distribution")
+
+ # Set default or predetermined values for X1 and X8
+    X1 = -0.00119112 * X2 + 1.5642495965572887  # Calculated by the surface area
+    X8 = 3     # Example default value for X8
 
 
 with col3:
