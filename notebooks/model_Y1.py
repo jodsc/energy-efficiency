@@ -93,3 +93,8 @@ fig = px.bar(importance_df,
 # Display the chart
 fig.show()
 
+import pickle
+
+# Save Model as Pickle-File
+with open('xgboost_regression_model1.pkl', 'wb') as file:
+    pickle.dump(xg_reg, file)
