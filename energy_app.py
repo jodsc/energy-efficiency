@@ -76,9 +76,9 @@ with col3:
 
         
         # Assuming cpred contains the cooling load prediction
-        hpred_rounded = round(cpred[0], 2)
+        hpred_rounded = round(hpred[0], 2)
         st.write(f"The cooling load prediction is: {hpred_rounded}")
         
         # Assuming cpred contains the cooling load prediction
         cpred_rounded = round(cpred[0], 2)
-        st.write(f"The cooling load prediction is: {cpred_rounded}")
+        st.write(f"The heating load prediction is: {cpred_rounded}")
