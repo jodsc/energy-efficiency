@@ -87,3 +87,62 @@ with col2:
         # Assuming cpred contains the cooling load prediction
         cpred_rounded = round(cpred[0], 2)
         st.write(f"The heating load prediction is: {cpred_rounded :.2f}")
+
+        import math
+        # Constants
+        HEATING_PUMP_CAPACITY = 14  # in kWh
+        AC_CAPACITY = 9  # in kWh
+        HEATING_PUMP_COST = 11000  # in €
+        AC_COST = 6000  # in €
+
+        # Predictions from the model
+        # Example predictions, replace with actual predictions from your model
+        heating_load = hpred_rounded 
+        cooling_load = cpred_rounded
+
+        # Calculating the number of heating pumps and ACs needed
+        num_heating_pumps = math.ceil(heating_load / HEATING_PUMP_CAPACITY)
+        num_acs_for_heating = math.ceil(max(0, heating_load - num_heating_pumps * HEATING_PUMP_CAPACITY) / AC_CAPACITY)
+        num_acs_for_cooling = math.ceil(cooling_load / AC_CAPACITY)
+
+        # Total number of ACs needed is the max of ACs needed for heating and cooling
+        total_acs_needed = max(num_acs_for_heating, num_acs_for_cooling)
+
+        # Calculating total costs
+        total_cost = (num_heating_pumps * HEATING_PUMP_COST) + (total_acs_needed * AC_COST)
+
+        # Displaying the results
+        
+        st.write(f"Number of heating pumps needed: {num_heating_pumps}")
+        st.write(f"Total number of additional ACs needed: {total_acs_needed}")
+        st.write(f"Estimated investment needed for covering your cooling and heating given the characteristics of your house: {total_cost:.2f} €")
+
+        # Checking if additional ACs are needed for cooling load
+        if total_acs_needed > num_acs_for_heating:
+            additional_acs_for_cooling = total_acs_needed - num_acs_for_heating
+            st.write(f"Out of the total ACs, {additional_acs_for_cooling} are additionally needed to cover the cooling load.")
+        else:
+            st.write("No additional ACs are needed beyond those required for the heating load.")
+
+
+        # Costs for energy
+        cost_per_unit = 0.31  # Costs per kWh in Euro
+
+        # Asumed consumption heating based on the usage per m2
+        average_annual_consumption_h = 95 * X2  # Durchschnittlicher Jahresverbrauch in kWh
+
+        # Annual costs for warming pump
+        yearly_heating_bill = average_annual_consumption_h * cost_per_unit
+
+        # Ergebnis anzeigen
+        st.write(f"Estimaed anual costs for heating based on your surface area: {yearly_heating_bill:.2f} €")
+
+         # Asumed consumption cooling based on the usage per m2
+        average_annual_consumption_c = 48 * X2  # Durchschnittlicher Jahresverbrauch in kWh
+
+        # Annual costs for AC
+        yearly_cooling_bill = average_annual_consumption_c * cost_per_unit
+
+        # Ergebnis anzeigen
+        st.write(f"Estimaed anual costs for cooling based on your surface area: {yearly_cooling_bill:.2f} €")
+
