@@ -2,10 +2,18 @@
 
 ## Overview
 This project utilizes the Energy Efficiency dataset from the UCI Machine Learning Repository to analyze energy efficiency based on various building characteristics. The original study simulated 12 different building shapes in Ecotect, varying by surface area, overall height among other parameters. The dataset consists of 768 samples and 8 features, aiming to predict two real-valued responses: Heating Load (Y1) and Cooling Load (Y2).
+
 https://archive.ics.uci.edu/dataset/242/energy+efficiency
 
 ## Project Goal
-The aim is to provide a predictive tool for homeowners or individuals planning to construct a house, enabling them to estimate energy costs based on specific house characteristics. Users can input data related to building shape, orientation, and other features to receive estimates for heating and cooling loads, essential for planning energy-efficient buildings.
+The aim is to provide a predictive tool for homeowners or individuals planning to construct a house, enabling them to estimate energy costs based on specific house characteristics. 
+
+Features from the dataset have been consolidated, reworded and coded to provide a user-friendly experience with clear prompts.
+
+Users input data related to building shape, orientation, and other features to receive estimates for heating and cooling loads, essential 
+for planning energy-efficient buildings.
+
+Once the forecasts have been made, the app will propose an approporiate HVAC (Heating, Ventilation and Air Conditioning) system to efficiently heat and cool the property.
 
 ## Approach
 1. Data Exploration: Initial examination of the dataset to understand its features and target variables.
@@ -28,4 +36,3 @@ pip install -r requirements.txt
 
 ## Acknowledgments
 Special thanks to the creators of the Energy Efficiency dataset at the UCI Machine Learning Repository for providing this valuable resource to the community.
-
